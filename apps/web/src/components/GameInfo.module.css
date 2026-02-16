@@ -1,0 +1,144 @@
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 180px;
+  min-width: 180px;
+  background: rgba(4, 8, 22, 0.88);
+  border-radius: 6px;
+  border: 1px solid rgba(91, 163, 212, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top red accent line */
+.info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #cc2200 30%, #cc2200 70%, transparent);
+}
+
+.scoreboardHeader {
+  text-align: center;
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 5px;
+  color: rgba(91, 163, 212, 0.4);
+  text-transform: uppercase;
+  padding: 0.9rem 1.25rem 0.7rem;
+  border-bottom: 1px solid rgba(91, 163, 212, 0.1);
+}
+
+.statBlock {
+  padding: 0.7rem 1.25rem;
+  border-bottom: 1px solid rgba(91, 163, 212, 0.07);
+}
+
+.label {
+  font-size: 0.58rem;
+  color: rgba(91, 163, 212, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.value {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(91, 163, 212, 0.35);
+}
+
+/* Level + Lines side by side */
+.statsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid rgba(91, 163, 212, 0.07);
+}
+
+.statsRow .statBlock {
+  border-bottom: none;
+}
+
+.statsRow .statBlock:first-child {
+  border-right: 1px solid rgba(91, 163, 212, 0.07);
+}
+
+.statsRow .value {
+  font-size: 1.6rem;
+}
+
+/* ── Next Piece ── */
+.nextSection {
+  padding: 0.7rem 1.25rem;
+  flex: 1;
+}
+
+.preview {
+  display: grid;
+  gap: 2px;
+  margin-top: 0.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  border: 1px solid rgba(91, 163, 212, 0.1);
+  padding: 0.5rem;
+  justify-content: center;
+}
+
+/* ── Overlay ── */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.88);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  gap: 0.4rem;
+}
+
+.overlayMessage {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #cc2200;
+  text-shadow: 0 0 24px rgba(204, 34, 0, 0.7);
+}
+
+.overlayMessagePaused {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-align: center;
+  color: #5ba3d4;
+  text-shadow: 0 0 24px rgba(91, 163, 212, 0.7);
+}
+
+.overlayHint {
+  font-size: 0.62rem;
+  color: rgba(184, 212, 240, 0.35);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}

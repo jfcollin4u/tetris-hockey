@@ -1,0 +1,108 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 175px;
+  min-width: 175px;
+  background: rgba(4, 8, 22, 0.88);
+  border-radius: 6px;
+  border: 1px solid rgba(220, 160, 40, 0.2);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Top gold accent */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(220, 160, 40, 0.85) 30%, rgba(220, 160, 40, 0.85) 70%, transparent);
+}
+
+.header {
+  text-align: center;
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 5px;
+  color: rgba(220, 160, 40, 0.5);
+  text-transform: uppercase;
+  padding: 0.9rem 1rem 0.7rem;
+  border-bottom: 1px solid rgba(220, 160, 40, 0.1);
+}
+
+.empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(184, 212, 240, 0.3);
+  font-style: italic;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-bottom: 1px solid rgba(220, 160, 40, 0.05);
+  transition: background 0.15s;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row.highlight {
+  background: rgba(220, 160, 40, 0.1);
+  border-left: 2px solid rgba(220, 160, 40, 0.5);
+  padding-left: calc(0.9rem - 2px);
+}
+
+.rank {
+  font-size: 0.7rem;
+  color: rgba(220, 160, 40, 0.55);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.score {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.15rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(91, 163, 212, 0.3);
+}
+
+.meta {
+  font-size: 0.56rem;
+  color: rgba(91, 163, 212, 0.45);
+  letter-spacing: 1px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
