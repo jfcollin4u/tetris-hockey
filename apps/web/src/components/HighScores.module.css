@@ -106,3 +106,60 @@
   font-weight: 400;
   text-transform: uppercase;
 }
+
+/* ── Mobile: compact horizontal scrollable strip ── */
+@media (max-width: 700px) {
+  .panel {
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .header {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 0.75rem 0.5rem;
+    border-bottom: none;
+    border-right: 1px solid rgba(220, 160, 40, 0.1);
+    letter-spacing: 3px;
+  }
+
+  .list {
+    flex-direction: row;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .row {
+    flex-direction: column;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    min-width: 70px;
+    border-bottom: none;
+    border-right: 1px solid rgba(220, 160, 40, 0.05);
+  }
+
+  .rank {
+    font-size: 0.55rem;
+  }
+
+  .score {
+    font-size: 0.95rem;
+  }
+
+  .meta {
+    font-size: 0.5rem;
+  }
+
+  .empty {
+    padding: 0.75rem 1rem;
+    font-size: 0.65rem;
+    text-align: left;
+  }
+}

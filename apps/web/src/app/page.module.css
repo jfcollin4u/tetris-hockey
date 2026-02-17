@@ -64,6 +64,11 @@
   align-items: stretch;
 }
 
+/* ── Board Wrapper (mobile scaling) ── */
+.boardWrapper {
+  transform-origin: center top;
+}
+
 /* ── Wisdom Bar ── */
 .wisdomBar {
   width: 100%;
@@ -233,13 +238,72 @@
   box-shadow: 0 0 16px rgba(204, 34, 0, 0.3);
 }
 
-@media (max-width: 768px) {
-  .gameArea {
-    flex-direction: column;
-    align-items: center;
+/* ── Mobile ── */
+@media (max-width: 700px) {
+  .main {
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .container {
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .titleEyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 5px;
   }
 
   .title {
-    font-size: 3rem;
+    font-size: 2.8rem;
+    letter-spacing: 3px;
+  }
+
+  /* Stack: InfoBar → Board → HighScores */
+  .gameArea {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+  }
+
+  /* Wisdom bar smaller on mobile */
+  .wisdomBar {
+    max-width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .wisdomText {
+    font-size: 1.3rem;
+  }
+
+  /* Action buttons full-width row */
+  .actionRow {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btnRestart,
+  .btnPause {
+    flex: 1;
+    max-width: 160px;
+  }
+
+  /* Hide keyboard controls on mobile */
+  .controls {
+    display: none;
+  }
+
+  /* Scale board to fit screen */
+  .boardWrapper {
+    transform: scale(0.80);
+    margin-bottom: -128px; /* 639 * 0.20 */
+  }
+}
+
+@media (max-width: 390px) {
+  .boardWrapper {
+    transform: scale(0.65);
+    margin-bottom: -224px; /* 639 * 0.35 */
   }
 }

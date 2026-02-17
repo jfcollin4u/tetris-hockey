@@ -15,7 +15,6 @@ import {
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
-const INITIAL_DROP_INTERVAL = 1000;
 const LEVEL_UP_LINES = 10;
 
 export function useGameLogic() {
@@ -173,8 +172,8 @@ export function useGameLogic() {
       return;
     }
 
-    // Spread speed across 50 levels: level 1 = 1000ms, level ~48+ = 50ms minimum
-    const dropSpeed = Math.max(50, 1000 - (level - 1) * 20);
+    // 10% faster each level: 1000ms → 900ms → 810ms … floor at 50ms (~level 29+)
+    const dropSpeed = Math.max(50, Math.round(1000 * Math.pow(0.9, level - 1)));
     const now = Date.now();
     const timeSinceLastDrop = now - lastDropTimeRef.current;
 

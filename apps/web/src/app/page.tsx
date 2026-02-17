@@ -4,6 +4,7 @@ import { useEffect, useCallback, useRef } from 'react';
 import { GameBoard } from '@/components/GameBoard';
 import { GameInfo } from '@/components/GameInfo';
 import { HighScores } from '@/components/HighScores';
+import { MobileControls } from '@/components/MobileControls';
 import { useGameLogic } from '@/hooks/useGameLogic';
 import { useHighScores } from '@/hooks/useHighScores';
 import styles from './page.module.css';
@@ -81,6 +82,41 @@ export default function Home() {
   const { scores, addScore } = useHighScores();
   const wisdom = LEVEL_WISDOM[Math.min(level - 1, LEVEL_WISDOM.length - 1)];
 
+  // Touch swipe detection for mobile
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      if (!touchStart.current || gameOver || paused) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStart.current.x;
+      const dy = t.clientY - touchStart.current.y;
+      const adx = Math.abs(dx);
+      const ady = Math.abs(dy);
+
+      if (adx < 8 && ady < 8) {
+        // Tap → hard drop
+        dropPiece();
+      } else if (adx > ady) {
+        // Horizontal swipe
+        movePiece({ x: dx > 0 ? 1 : -1, y: 0 });
+      } else if (dy < -20) {
+        // Swipe up → rotate
+        rotatePiece();
+      } else if (dy > 20) {
+        // Swipe down → soft drop
+        movePiece({ x: 0, y: 1 });
+      }
+      touchStart.current = null;
+    },
+    [gameOver, paused, movePiece, rotatePiece, dropPiece]
+  );
+
   // Save score to leaderboard when game ends
   const prevGameOver = useRef(false);
   useEffect(() => {
@@ -157,9 +193,20 @@ export default function Home() {
             gameOver={gameOver}
             paused={paused}
           />
-          <GameBoard board={board} currentPiece={currentPiece} />
+          <div className={styles.boardWrapper} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'none' }}>
+            <GameBoard board={board} currentPiece={currentPiece} />
+          </div>
           <HighScores scores={scores} latestScore={gameOver ? score : 0} />
         </div>
+
+        <MobileControls
+          onLeft={() => movePiece({ x: -1, y: 0 })}
+          onRight={() => movePiece({ x: 1, y: 0 })}
+          onRotate={rotatePiece}
+          onSoftDrop={() => movePiece({ x: 0, y: 1 })}
+          onHardDrop={dropPiece}
+          onPause={togglePause}
+        />
 
         <div className={styles.wisdomBar}>
           <span className={styles.wisdomLabel}>Coach says</span>

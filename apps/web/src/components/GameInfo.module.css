@@ -142,3 +142,45 @@
   text-transform: uppercase;
   margin-top: 0.2rem;
 }
+
+/* ── Mobile: compact horizontal strip ── */
+@media (max-width: 700px) {
+  .info {
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 6px;
+    padding: 0;
+  }
+
+  .scoreboardHeader {
+    display: none;
+  }
+
+  /* Score takes full width row */
+  .statBlock {
+    padding: 0.45rem 0.9rem;
+    border-bottom: none;
+    border-right: 1px solid rgba(91, 163, 212, 0.07);
+  }
+
+  .value {
+    font-size: 1.4rem;
+  }
+
+  .statsRow {
+    border-bottom: none;
+    flex: 1;
+  }
+
+  .statsRow .value {
+    font-size: 1.2rem;
+  }
+
+  /* Hide next piece preview on mobile — shown in the compact strip is too cramped */
+  .nextSection {
+    display: none;
+  }
+}
