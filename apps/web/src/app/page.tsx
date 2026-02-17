@@ -24,57 +24,63 @@ const LEVEL_BACKGROUNDS: string[] = [
 ];
 
 const LEVEL_WISDOM: string[] = [
-  /* 1  */ 'Lace up tight. Every champion started right here.',
-  /* 2  */ 'Keep your stick on the ice and your head in the game.',
-  /* 3  */ 'Skate to where the puck is going, not where it has been.',
-  /* 4  */ 'A good shift is built on hustle and heart.',
-  /* 5  */ 'Defense wins games. Stacking blocks wins championships.',
-  /* 6  */ "You miss 100% of the shots you don't take. — Wayne Gretzky",
-  /* 7  */ "The puck doesn't care about your excuses.",
-  /* 8  */ "Hard work beats talent when talent doesn't work hard.",
-  /* 9  */ 'Every block you stack is a brick in your dynasty.',
-  /* 10 */ "Momentum is everything. Don't let up now.",
-  /* 11 */ 'The best players see the ice before it happens.',
-  /* 12 */ 'When your legs are tired, play with your heart.',
-  /* 13 */ "Champions don't slow down in the second period.",
-  /* 14 */ 'Stack it high. Clear the ice. Repeat.',
-  /* 15 */ "The crowd's energy is yours — take it.",
-  /* 16 */ "You've earned every line you've cleared.",
-  /* 17 */ 'Great players make everyone around them better.',
-  /* 18 */ 'Pain is just weakness leaving the bench.',
-  /* 19 */ 'One more period. One more shift. One more block.',
-  /* 20 */ "You're in the zone now. Trust your hands.",
-  /* 21 */ "The ice doesn't lie — and neither do your results.",
-  /* 22 */ "Play every shift like it's overtime.",
-  /* 23 */ "The Cup isn't won in one game. Neither is this.",
-  /* 24 */ 'Stay sharp. The game gets faster from here.',
-  /* 25 */ 'Halfway to glory. The second half is for legends.',
-  /* 26 */ 'Pressure makes diamonds — and elite players.',
-  /* 27 */ 'When the going gets tough, the tough get skating.',
-  /* 28 */ 'No one remembers who gave up. Be remembered.',
-  /* 29 */ 'Your mind quits before your body does. Ignore it.',
-  /* 30 */ 'This is where champions separate from the rest.',
-  /* 31 */ 'Ice cold focus. Burning determination.',
-  /* 32 */ "The zone is real. You're living in it.",
-  /* 33 */ 'Every great dynasty survived moments exactly like this.',
-  /* 34 */ 'There is no bench rest at this level.',
-  /* 35 */ "You're not just a player anymore. You're a force.",
-  /* 36 */ 'The puck finds the players who want it most.',
-  /* 37 */ "Clutch isn't born — it's built in moments like these.",
-  /* 38 */ "The crowd is on their feet. Don't let them sit down.",
-  /* 39 */ "You've outlasted every quitter. Keep building.",
-  /* 40 */ 'Elite is a decision you made. Now live it.',
-  /* 41 */ 'Hall of Fame territory. Leave your mark on this ice.',
-  /* 42 */ 'The ice remembers every legend who skated it.',
-  /* 43 */ 'Pure instinct now. Your hands already know what to do.',
-  /* 44 */ "You've outlasted everyone who doubted you.",
-  /* 45 */ 'The summit is in sight. Every single block matters.',
-  /* 46 */ 'Only the greatest have ever played this long.',
-  /* 47 */ "Legends don't retire — they elevate.",
-  /* 48 */ 'Your name belongs on this arena wall.',
-  /* 49 */ 'One final push. This is what you were built for.',
-  /* 50 */ 'You are the game. Gretzky himself would bow.',
+  /* 1  */ 'The only limits that exist are the ones you accept.',
+  /* 2  */ 'Discipline is choosing what you want most over what you want now.',
+  /* 3  */ 'You are the average of the five habits you repeat daily.',
+  /* 4  */ 'Silence is the loudest answer you can give.',
+  /* 5  */ 'Comfort is the enemy of progress.',
+  /* 6  */ 'What you tolerate, you teach.',
+  /* 7  */ 'The mind gives up long before the body does.',
+  /* 8  */ 'Your character is built in moments nobody is watching.',
+  /* 9  */ 'Every master was once a disaster who kept going.',
+  /* 10 */ 'Be so good they cannot ignore you.',
+  /* 11 */ 'Pain is temporary. Quitting lasts forever.',
+  /* 12 */ 'The person you become is built by the choices you make today.',
+  /* 13 */ 'Respect is earned in the moments when it costs you something.',
+  /* 14 */ 'Strength is not the absence of fear. It is acting despite it.',
+  /* 15 */ 'The only person you should compete with is who you were yesterday.',
+  /* 16 */ 'Small consistent steps beat one heroic leap every time.',
+  /* 17 */ 'Love is not something you find. It is something you build.',
+  /* 18 */ 'How you do anything is how you do everything.',
+  /* 19 */ 'Your habits are a vote for the person you want to become.',
+  /* 20 */ 'The loudest voice in the room is rarely the wisest.',
+  /* 21 */ 'You cannot pour from an empty cup. Fill yours first.',
+  /* 22 */ 'Work in silence. Let success make the noise.',
+  /* 23 */ 'A focused mind is more powerful than a brilliant one.',
+  /* 24 */ 'Accountability is the rarest form of courage.',
+  /* 25 */ 'You do not rise to your goals. You fall to your systems.',
+  /* 26 */ 'Patience is not waiting. It is working while you wait.',
+  /* 27 */ 'The right kind of hard work never feels wasted.',
+  /* 28 */ 'Earn your opinions. Read. Question. Think.',
+  /* 29 */ 'Kindness is strength that does not need to prove itself.',
+  /* 30 */ 'The world makes room for people who know where they are going.',
+  /* 31 */ 'Do not ask for a lighter load. Ask for broader shoulders.',
+  /* 32 */ 'Trust is built in drops and lost in buckets.',
+  /* 33 */ 'You cannot go back to change the beginning. But you can start now.',
+  /* 34 */ 'Be the energy you want to attract.',
+  /* 35 */ 'Clarity is the superpower nobody talks about.',
+  /* 36 */ 'Real growth lives just outside your comfort zone.',
+  /* 37 */ 'Listen twice as much as you speak.',
+  /* 38 */ 'The most dangerous words: I already know that.',
+  /* 39 */ 'Joy is not in things. It is in you.',
+  /* 40 */ 'Ambition without humility is just noise.',
+  /* 41 */ 'Do it scared. Do it tired. Just do not stop.',
+  /* 42 */ 'Your reaction to adversity defines your character.',
+  /* 43 */ 'A good life is built one good decision at a time.',
+  /* 44 */ 'Love deeply. Lead honestly. Work relentlessly.',
+  /* 45 */ 'Let your actions speak so loudly your words become irrelevant.',
+  /* 46 */ 'Focus is saying no to a thousand good ideas.',
+  /* 47 */ 'Show up fully or do not show up at all.',
+  /* 48 */ 'Iron sharpens iron. Surround yourself accordingly.',
+  /* 49 */ 'Legacy is built in ordinary moments, not extraordinary ones.',
+  /* 50 */ 'The game is never over. It never is. Keep stacking.',
 ];
+
+const GOAL_LABELS: Record<number, string> = {
+  2: 'GOAL!',
+  3: 'HAT TRICK!',
+  4: 'GRAND SLAM!',
+};
 
 export default function Home() {
   const {
@@ -86,6 +92,8 @@ export default function Home() {
     linesCleared,
     gameOver,
     paused,
+    lastClearCount,
+    clearEventId,
     movePiece,
     rotatePiece,
     dropPiece,
@@ -121,16 +129,12 @@ export default function Home() {
       const ady = Math.abs(dy);
 
       if (adx < 8 && ady < 8) {
-        // Tap → hard drop
         dropPiece();
       } else if (adx > ady) {
-        // Horizontal swipe
         movePiece({ x: dx > 0 ? 1 : -1, y: 0 });
       } else if (dy < -20) {
-        // Swipe up → rotate
         rotatePiece();
       } else if (dy > 20) {
-        // Swipe down → soft drop
         movePiece({ x: 0, y: 1 });
       }
       touchStart.current = null;
@@ -193,6 +197,10 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
+  const goalLabel = GOAL_LABELS[lastClearCount] ?? 'GOAL!';
+  const isHatTrick = lastClearCount === 3;
+  const isGrandSlam = lastClearCount >= 4;
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -215,17 +223,23 @@ export default function Home() {
               gameOver={gameOver}
               paused={paused}
             />
-            <div className={styles.wisdomBar}>
-              <span className={styles.wisdomLabel}>Coach says</span>
-              <p className={styles.wisdomText}>&ldquo;{wisdom}&rdquo;</p>
-            </div>
           </div>
           <div className={styles.boardWrapper} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'none' }}>
             <GameBoard board={board} currentPiece={currentPiece} />
             <div className={styles.wisdomOverlay}>
-              <span className={styles.wisdomOverlayLabel}>Coach says</span>
+              <span className={styles.wisdomOverlayLabel}>Words of wisdom</span>
               <p className={styles.wisdomOverlayText}>&ldquo;{wisdom}&rdquo;</p>
             </div>
+            {clearEventId > 0 && (
+              <div
+                key={clearEventId}
+                className={`${styles.goalOverlay} ${isHatTrick ? styles.goalHatTrick : ''} ${isGrandSlam ? styles.goalGrandSlam : ''}`}
+              >
+                <div className={styles.goalText}>{goalLabel}</div>
+                {isHatTrick && <div className={styles.hatTrickPucks}>🏒 🏒 🏒</div>}
+                {isGrandSlam && <div className={styles.hatTrickPucks}>🏆</div>}
+              </div>
+            )}
           </div>
           <div className={styles.highScoresWrapper}>
             <HighScores scores={scores} latestScore={gameOver ? score : 0} />

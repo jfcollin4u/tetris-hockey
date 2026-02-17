@@ -63,7 +63,7 @@
   align-items: stretch;
 }
 
-/* ── Left Column (GameInfo + Wisdom) ── */
+/* ── Left Column (GameInfo) ── */
 .leftCol {
   display: flex;
   flex-direction: column;
@@ -118,39 +118,96 @@
   margin: 0;
 }
 
-/* ── Wisdom Bar (left column, compact) ── */
-.wisdomBar {
-  background: rgba(4, 8, 22, 0.82);
-  border: 1px solid rgba(220, 160, 40, 0.2);
-  border-left: 4px solid rgba(220, 160, 40, 0.7);
-  border-radius: 4px;
-  padding: 0.9rem 0.85rem;
+/* ── Goal Celebration Overlay ── */
+@keyframes goalFlash {
+  0%   { background: rgba(204, 34, 0, 0.55); }
+  20%  { background: rgba(204, 34, 0, 0.12); }
+  100% { background: transparent; }
+}
+
+@keyframes goalSlam {
+  0%   { transform: scale(2.8) rotate(-4deg); opacity: 0; }
+  12%  { transform: scale(1.05) rotate(1deg);  opacity: 1; }
+  18%  { transform: scale(0.97) rotate(-1deg); opacity: 1; }
+  24%  { transform: scale(1) rotate(0deg);     opacity: 1; }
+  72%  { transform: scale(1) rotate(0deg);     opacity: 1; }
+  100% { transform: scale(0.85) rotate(0deg); opacity: 0; }
+}
+
+@keyframes hatTrickFlash {
+  0%   { background: rgba(220, 160, 0, 0.6); }
+  20%  { background: rgba(220, 160, 0, 0.15); }
+  100% { background: transparent; }
+}
+
+@keyframes pucksIn {
+  0%   { transform: translateY(30px); opacity: 0; }
+  40%  { transform: translateY(-4px); opacity: 1; }
+  55%  { transform: translateY(0);    opacity: 1; }
+  80%  { transform: translateY(0);    opacity: 1; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+
+.goalOverlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-  flex: 1;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  gap: 0.5rem;
+  animation: goalFlash 2.4s ease-out forwards;
 }
 
-.wisdomLabel {
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(220, 160, 40, 0.85);
+.goalOverlay.goalHatTrick {
+  animation: hatTrickFlash 2.8s ease-out forwards;
 }
 
-.wisdomText {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.92rem;
-  font-style: italic;
-  font-weight: 300;
-  color: rgba(220, 235, 255, 0.9);
-  line-height: 1.5;
-  margin: 0;
+.goalOverlay.goalGrandSlam {
+  animation: hatTrickFlash 2.8s ease-out forwards;
 }
 
-/* ── Action Buttons (Restart / Play / Pause) ── */
+.goalText {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 6rem;
+  line-height: 1;
+  color: #ff3300;
+  text-shadow:
+    0 0 20px rgba(255, 80, 0, 1),
+    0 0 60px rgba(204, 34, 0, 0.8),
+    0 2px 0 rgba(0, 0, 0, 0.5);
+  letter-spacing: 6px;
+  animation: goalSlam 2.4s cubic-bezier(0.22, 0.68, 0, 1.2) forwards;
+}
+
+.goalHatTrick .goalText {
+  color: #ffd700;
+  text-shadow:
+    0 0 20px rgba(255, 215, 0, 1),
+    0 0 60px rgba(220, 160, 0, 0.9),
+    0 2px 0 rgba(0, 0, 0, 0.5);
+  animation: goalSlam 2.8s cubic-bezier(0.22, 0.68, 0, 1.2) forwards;
+}
+
+.goalGrandSlam .goalText {
+  color: #a0e8ff;
+  text-shadow:
+    0 0 20px rgba(160, 232, 255, 1),
+    0 0 60px rgba(91, 163, 212, 0.9),
+    0 2px 0 rgba(0, 0, 0, 0.5);
+  animation: goalSlam 2.8s cubic-bezier(0.22, 0.68, 0, 1.2) forwards;
+}
+
+.hatTrickPucks {
+  font-size: 2rem;
+  animation: pucksIn 2.8s ease-out forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
+}
+
+/* ── Action Buttons (Play / Pause) ── */
 .actionRow {
   display: flex;
   gap: 0.75rem;
@@ -330,16 +387,6 @@
     gap: 0;
   }
 
-  /* Hide wisdom bar — shown as overlay on board */
-  .wisdomBar {
-    display: none;
-  }
-
-  /* Show wisdom overlay on board */
-  .wisdomOverlay {
-    display: flex;
-  }
-
   /* Hide leaderboard on mobile to save vertical space */
   .highScoresWrapper {
     display: none;
@@ -366,6 +413,11 @@
     transform: scale(0.76);
     margin-bottom: -153px; /* 639 * 0.24 */
   }
+
+  /* Goal text smaller on mobile */
+  .goalText {
+    font-size: 4rem;
+  }
 }
 
 /* Mid-size phones (667–750px viewport height) */
@@ -390,5 +442,8 @@
   }
   .wisdomOverlayText {
     font-size: 2rem;
+  }
+  .goalText {
+    font-size: 3rem;
   }
 }

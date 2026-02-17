@@ -28,6 +28,9 @@ export function useGameLogic() {
   const [linesCleared, setLinesCleared] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [lastClearCount, setLastClearCount] = useState(0);
+  const [clearEventId, setClearEventId] = useState(0);
+  const clearEventIdRef = useRef(0);
   const dropIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastDropTimeRef = useRef<number>(Date.now());
 
@@ -47,11 +50,20 @@ export function useGameLogic() {
     setLinesCleared(0);
     setGameOver(false);
     setPaused(false);
+    setLastClearCount(0);
   }, [spawnNewPiece]);
 
   useEffect(() => {
     initializeGame();
   }, [initializeGame]);
+
+  const triggerClearEvent = useCallback((cleared: number) => {
+    if (cleared >= 2) {
+      clearEventIdRef.current += 1;
+      setClearEventId(clearEventIdRef.current);
+      setLastClearCount(cleared);
+    }
+  }, []);
 
   const movePiece = useCallback(
     (offset: Position) => {
@@ -88,8 +100,6 @@ export function useGameLogic() {
       newY++;
     }
 
-    // Lock the piece at the dropped position directly — avoids React batching overwriting
-    // the setCurrentPiece(dropped) call when lockPiece also calls setCurrentPiece(nextPiece).
     const droppedPiece = { ...currentPiece, position: { ...currentPiece.position, y: newY } };
     const newBoard = placePiece(board, droppedPiece);
     const { newBoard: clearedBoard, linesCleared: cleared } = clearLines(newBoard);
@@ -106,6 +116,8 @@ export function useGameLogic() {
       setScore((prev) => prev + points);
     }
 
+    triggerClearEvent(cleared);
+
     if (nextPiece) {
       const newNextPiece = spawnNewPiece();
       setCurrentPiece(nextPiece);
@@ -117,7 +129,7 @@ export function useGameLogic() {
       setCurrentPiece(spawnNewPiece());
       setNextPiece(spawnNewPiece());
     }
-  }, [board, currentPiece, gameOver, paused, nextPiece, level, spawnNewPiece]);
+  }, [board, currentPiece, gameOver, paused, nextPiece, level, spawnNewPiece, triggerClearEvent]);
 
   const lockPiece = useCallback(() => {
     if (!currentPiece) return;
@@ -138,6 +150,8 @@ export function useGameLogic() {
       setScore((prev) => prev + points);
     }
 
+    triggerClearEvent(cleared);
+
     if (nextPiece) {
       const newNextPiece = spawnNewPiece();
       setCurrentPiece(nextPiece);
@@ -151,7 +165,7 @@ export function useGameLogic() {
       setCurrentPiece(newPiece);
       setNextPiece(spawnNewPiece());
     }
-  }, [board, currentPiece, nextPiece, level, spawnNewPiece]);
+  }, [board, currentPiece, nextPiece, level, spawnNewPiece, triggerClearEvent]);
 
   const togglePause = useCallback(() => {
     if (!gameOver) {
@@ -172,8 +186,8 @@ export function useGameLogic() {
       return;
     }
 
-    // 10% faster each level: 1000ms → 900ms → 810ms … floor at 50ms (~level 29+)
-    const dropSpeed = Math.max(50, Math.round(1000 * Math.pow(0.9, level - 1)));
+    // 50% faster each level: 1000ms → 667ms → 444ms … floor at 50ms (~level 9+)
+    const dropSpeed = Math.max(50, Math.round(1000 / Math.pow(1.5, level - 1)));
     const now = Date.now();
     const timeSinceLastDrop = now - lastDropTimeRef.current;
 
@@ -206,6 +220,8 @@ export function useGameLogic() {
     linesCleared,
     gameOver,
     paused,
+    lastClearCount,
+    clearEventId,
     movePiece,
     rotatePiece,
     dropPiece,
