@@ -83,36 +83,38 @@
   position: relative;
 }
 
-/* ── Wisdom Overlay (mobile only — on top of game board) ── */
+/* ── Wisdom Overlay (mobile — watermark behind falling pieces) ── */
 .wisdomOverlay {
   display: none;
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 2.5rem 1.2rem 1rem;
+  inset: 0;
+  padding: 1.5rem 1.2rem;
   pointer-events: none;
   z-index: 4;
-  background: linear-gradient(to top, rgba(4, 8, 22, 0.82) 0%, transparent 100%);
   flex-direction: column;
-  gap: 0.35rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
 }
 
 .wisdomOverlayLabel {
-  font-size: 0.55rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   text-transform: uppercase;
-  color: rgba(220, 160, 40, 0.75);
+  color: rgba(220, 160, 40, 0.28);
 }
 
 .wisdomOverlayText {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1rem;
-  font-style: italic;
-  font-weight: 300;
-  color: rgba(220, 235, 255, 0.72);
-  line-height: 1.4;
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 2.6rem;
+  font-style: normal;
+  font-weight: 400;
+  color: rgba(220, 235, 255, 0.13);
+  line-height: 1.1;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   margin: 0;
 }
 
