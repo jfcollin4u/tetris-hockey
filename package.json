@@ -13,6 +13,17 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "next": "14.2.35"
+  },
+  "optionalDependencies": {
+    "@next/swc-darwin-x64": "14.2.33",
+    "@next/swc-darwin-arm64": "14.2.33",
+    "@next/swc-linux-x64-gnu": "14.2.33",
+    "@next/swc-linux-x64-musl": "14.2.33",
+    "@next/swc-linux-arm64-gnu": "14.2.33",
+    "@next/swc-linux-arm64-musl": "14.2.33",
+    "@next/swc-win32-x64-msvc": "14.2.33",
+    "@next/swc-win32-arm64-msvc": "14.2.33"
   }
 }

@@ -9,6 +9,20 @@ import { useGameLogic } from '@/hooks/useGameLogic';
 import { useHighScores } from '@/hooks/useHighScores';
 import styles from './page.module.css';
 
+// Hockey-themed background per level zone (5 levels each)
+const LEVEL_BACKGROUNDS: string[] = [
+  /* L1-5   Training Camp     */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(0, 80, 200, 0.28) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0, 40, 130, 0.2) 0%, transparent 70%), #06091a',
+  /* L6-10  Regular Season    */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(0, 150, 55, 0.3) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0, 90, 30, 0.2) 0%, transparent 70%), #050e07',
+  /* L11-15 Power Play        */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(110, 0, 200, 0.3) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(70, 0, 130, 0.22) 0%, transparent 70%), #09060e',
+  /* L16-20 Rivalry Night     */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(190, 15, 0, 0.35) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(110, 8, 0, 0.25) 0%, transparent 70%), #0e0505',
+  /* L21-25 Playoff Push      */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(0, 175, 165, 0.3) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0, 105, 100, 0.22) 0%, transparent 70%), #050d0d',
+  /* L26-30 Championship Run  */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(210, 145, 0, 0.35) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(135, 90, 0, 0.25) 0%, transparent 70%), #0e0b03',
+  /* L31-35 OT Thriller       */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(220, 80, 0, 0.35) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(145, 50, 0, 0.25) 0%, transparent 70%), #0e0703',
+  /* L36-40 Dynasty Mode      */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(175, 0, 135, 0.35) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(115, 0, 88, 0.25) 0%, transparent 70%), #0e060b',
+  /* L41-45 Legend Territory  */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(0, 185, 95, 0.32) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(0, 115, 58, 0.22) 0%, transparent 70%), #041009',
+  /* L46-50 Hall of Fame      */ 'radial-gradient(ellipse 100% 55% at 50% 0%, rgba(190, 215, 245, 0.24) 0%, transparent 70%), radial-gradient(ellipse 100% 50% at 50% 100%, rgba(140, 165, 195, 0.18) 0%, transparent 70%), #090c10',
+];
+
 const LEVEL_WISDOM: string[] = [
   /* 1  */ 'Lace up tight. Every champion started right here.',
   /* 2  */ 'Keep your stick on the ice and your head in the game.',
@@ -81,6 +95,13 @@ export default function Home() {
 
   const { scores, addScore } = useHighScores();
   const wisdom = LEVEL_WISDOM[Math.min(level - 1, LEVEL_WISDOM.length - 1)];
+
+  // Apply level-based background
+  useEffect(() => {
+    const zoneIndex = Math.min(Math.floor((level - 1) / 5), LEVEL_BACKGROUNDS.length - 1);
+    document.body.style.background = LEVEL_BACKGROUNDS[zoneIndex];
+    return () => { document.body.style.background = ''; };
+  }, [level]);
 
   // Touch swipe detection for mobile
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -185,14 +206,20 @@ export default function Home() {
         </div>
 
         <div className={styles.gameArea}>
-          <GameInfo
-            score={score}
-            level={level}
-            linesCleared={linesCleared}
-            nextPiece={nextPiece}
-            gameOver={gameOver}
-            paused={paused}
-          />
+          <div className={styles.leftCol}>
+            <GameInfo
+              score={score}
+              level={level}
+              linesCleared={linesCleared}
+              nextPiece={nextPiece}
+              gameOver={gameOver}
+              paused={paused}
+            />
+            <div className={styles.wisdomBar}>
+              <span className={styles.wisdomLabel}>Coach says</span>
+              <p className={styles.wisdomText}>&ldquo;{wisdom}&rdquo;</p>
+            </div>
+          </div>
           <div className={styles.boardWrapper} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'none' }}>
             <GameBoard board={board} currentPiece={currentPiece} />
           </div>
@@ -207,11 +234,6 @@ export default function Home() {
           onHardDrop={dropPiece}
           onPause={togglePause}
         />
-
-        <div className={styles.wisdomBar}>
-          <span className={styles.wisdomLabel}>Coach says</span>
-          <p className={styles.wisdomText}>&ldquo;{wisdom}&rdquo;</p>
-        </div>
 
         <div className={styles.actionRow}>
           <button className={styles.btnRestart} onClick={resetGame}>
