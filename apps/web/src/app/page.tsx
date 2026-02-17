@@ -222,8 +222,14 @@ export default function Home() {
           </div>
           <div className={styles.boardWrapper} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'none' }}>
             <GameBoard board={board} currentPiece={currentPiece} />
+            <div className={styles.wisdomOverlay}>
+              <span className={styles.wisdomOverlayLabel}>Coach says</span>
+              <p className={styles.wisdomOverlayText}>&ldquo;{wisdom}&rdquo;</p>
+            </div>
           </div>
-          <HighScores scores={scores} latestScore={gameOver ? score : 0} />
+          <div className={styles.highScoresWrapper}>
+            <HighScores scores={scores} latestScore={gameOver ? score : 0} />
+          </div>
         </div>
 
         <MobileControls
@@ -236,9 +242,6 @@ export default function Home() {
         />
 
         <div className={styles.actionRow}>
-          <button className={styles.btnRestart} onClick={resetGame}>
-            ↺ Restart
-          </button>
           {!gameOver ? (
             <button
               className={`${styles.btnPause} ${paused ? styles.btnPauseActive : ''}`}
