@@ -1,18 +1,47 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Piece } from '@tetris-hockey/shared';
+import { DropTrail } from '@/hooks/useGameLogic';
 import styles from './GameBoard.module.css';
 
 interface GameBoardProps {
   board: (string | null)[][];
   currentPiece: Piece | null;
+  dropTrail?: DropTrail | null;
 }
 
 const CELL_SIZE = 30;
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
-export function GameBoard({ board, currentPiece }: GameBoardProps) {
+export function GameBoard({ board, currentPiece, dropTrail }: GameBoardProps) {
+  // Pre-compute trail cell positions for performance
+  const trailMap = useMemo(() => {
+    if (!dropTrail) return null;
+    const { shape, x, fromY, toY, color } = dropTrail;
+    const range = toY - fromY;
+    if (range <= 0) return null;
+
+    const map = new Map<string, number>(); // "row-col" → opacity (0–1)
+    for (let trailY = fromY; trailY < toY; trailY++) {
+      // Cells closer to the landing point are more opaque
+      const opacity = 0.7 * ((trailY - fromY + 1) / range);
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < (shape[r]?.length ?? 0); c++) {
+          if (shape[r][c]) {
+            const boardRow = trailY + r;
+            const boardCol = x + c;
+            const key = `${boardRow}-${boardCol}`;
+            const existing = map.get(key) ?? 0;
+            if (opacity > existing) map.set(key, opacity);
+          }
+        }
+      }
+    }
+    return { map, color };
+  }, [dropTrail]);
+
   const renderCell = (row: number, col: number) => {
     let color = board[row][col];
 
@@ -31,15 +60,33 @@ export function GameBoard({ board, currentPiece }: GameBoardProps) {
       }
     }
 
+    // Trail cell (only if board cell is empty and not covered by current piece)
+    if (!color && trailMap) {
+      const trailOpacity = trailMap.map.get(`${row}-${col}`);
+      if (trailOpacity !== undefined) {
+        return (
+          <div
+            key={`${row}-${col}`}
+            className={`${styles.cell} ${styles.trailCell}`}
+            style={{
+              backgroundColor: trailMap.color,
+              borderColor: `${trailMap.color}44`,
+              boxShadow: `inset 0 0 10px ${trailMap.color}66`,
+            }}
+          />
+        );
+      }
+    }
+
     return (
       <div
         key={`${row}-${col}`}
         className={`${styles.cell}${color ? ` ${styles.filled}` : ''}`}
         style={{
-          backgroundColor: color || 'rgba(8, 25, 65, 0.55)',
-          borderColor: color ? `${color}55` : 'rgba(91, 163, 212, 0.07)',
+          backgroundColor: color || 'rgb(5, 13, 38)',
+          borderColor: color ? `${color}55` : 'rgba(91, 163, 212, 0.06)',
           boxShadow: color
-            ? `inset 0 0 10px ${color}33, 0 0 3px ${color}22`
+            ? `inset 0 0 10px ${color}44, 0 0 4px ${color}33`
             : undefined,
         }}
       />

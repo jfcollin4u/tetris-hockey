@@ -17,6 +17,14 @@ const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 const LEVEL_UP_LINES = 10;
 
+export interface DropTrail {
+  shape: boolean[][];
+  color: string;
+  x: number;
+  fromY: number;
+  toY: number;
+}
+
 export function useGameLogic() {
   const [board, setBoard] = useState<(string | null)[][]>(() =>
     createEmptyBoard(BOARD_WIDTH, BOARD_HEIGHT)
@@ -30,7 +38,9 @@ export function useGameLogic() {
   const [paused, setPaused] = useState(false);
   const [lastClearCount, setLastClearCount] = useState(0);
   const [clearEventId, setClearEventId] = useState(0);
+  const [dropTrail, setDropTrail] = useState<DropTrail | null>(null);
   const clearEventIdRef = useRef(0);
+  const trailTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastDropTimeRef = useRef<number>(Date.now());
 
@@ -51,6 +61,8 @@ export function useGameLogic() {
     setGameOver(false);
     setPaused(false);
     setLastClearCount(0);
+    setDropTrail(null);
+    if (trailTimerRef.current) clearTimeout(trailTimerRef.current);
   }, [spawnNewPiece]);
 
   useEffect(() => {
@@ -95,12 +107,27 @@ export function useGameLogic() {
   const dropPiece = useCallback(() => {
     if (!currentPiece || gameOver || paused) return;
 
-    let newY = currentPiece.position.y;
+    const fromY = currentPiece.position.y;
+    let newY = fromY;
     while (canPlacePiece(board, { ...currentPiece, position: { x: currentPiece.position.x, y: newY + 1 } })) {
       newY++;
     }
+    const toY = newY;
 
-    const droppedPiece = { ...currentPiece, position: { ...currentPiece.position, y: newY } };
+    // Set trail for significant drops (3+ rows)
+    if (toY - fromY > 2) {
+      if (trailTimerRef.current) clearTimeout(trailTimerRef.current);
+      setDropTrail({
+        shape: currentPiece.shape,
+        color: currentPiece.color,
+        x: currentPiece.position.x,
+        fromY,
+        toY,
+      });
+      trailTimerRef.current = setTimeout(() => setDropTrail(null), 350);
+    }
+
+    const droppedPiece = { ...currentPiece, position: { ...currentPiece.position, y: toY } };
     const newBoard = placePiece(board, droppedPiece);
     const { newBoard: clearedBoard, linesCleared: cleared } = clearLines(newBoard);
 
@@ -222,6 +249,7 @@ export function useGameLogic() {
     paused,
     lastClearCount,
     clearEventId,
+    dropTrail,
     movePiece,
     rotatePiece,
     dropPiece,

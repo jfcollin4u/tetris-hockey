@@ -207,6 +207,36 @@
   opacity: 0;
 }
 
+/* ── Hockey Fact Panel (left column, desktop only) ── */
+.hockeyFact {
+  background: rgba(4, 8, 22, 0.82);
+  border: 1px solid rgba(91, 163, 212, 0.18);
+  border-left: 4px solid rgba(91, 163, 212, 0.65);
+  border-radius: 4px;
+  padding: 0.9rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.hockeyFactLabel {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(91, 163, 212, 0.85);
+}
+
+.hockeyFactText {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: rgba(200, 225, 255, 0.88);
+  line-height: 1.55;
+  margin: 0;
+}
+
 /* ── Action Buttons (Play / Pause) ── */
 .actionRow {
   display: flex;
@@ -387,7 +417,11 @@
     gap: 0;
   }
 
-  /* Hide leaderboard on mobile to save vertical space */
+  /* Hide hockey fact + leaderboard on mobile to save vertical space */
+  .hockeyFact {
+    display: none;
+  }
+
   .highScoresWrapper {
     display: none;
   }

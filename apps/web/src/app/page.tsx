@@ -76,6 +76,34 @@ const LEVEL_WISDOM: string[] = [
   /* 50 */ 'The game is never over. It never is. Keep stacking.',
 ];
 
+const HOCKEY_FACTS: string[] = [
+  'Wayne Gretzky scored more assists alone than any other player\'s total career points.',
+  'A hockey puck is frozen before games to reduce bouncing on the ice.',
+  'The Stanley Cup has been lost, stolen, and used as a cereal bowl by players.',
+  'Goalie masks weren\'t worn in the NHL until Jacques Plante introduced one in 1959.',
+  'The longest NHL game lasted 176 minutes — played in 1936 between Detroit and Montreal.',
+  'The Montreal Canadiens have won 24 Stanley Cups — the most in NHL history.',
+  'Bobby Orr is the only defenseman ever to win the NHL scoring title.',
+  '"Hat trick" originated in cricket — a bowler received a hat for taking 3 wickets.',
+  'NHL ice is kept between 16°F and 22°F (-9°C to -6°C) during games.',
+  'Hockey skate blades are only 3 mm wide — the thickness of two credit cards.',
+  'Wayne Gretzky\'s #99 was retired league-wide — no NHL player can ever wear it again.',
+  'Mario Lemieux scored a goal on every possible manpower situation in a single 1988 game.',
+  'Gordie Howe played NHL hockey across five decades — from the 1940s through the 1980s.',
+  'The NHL was founded on November 26, 1917, in Montreal with just four teams.',
+  'Elite NHL slapshots travel over 100 mph — faster than most highway speed limits.',
+  'NHL arenas freeze 10,000–15,000 gallons of water to create the ice surface.',
+  'The original Stanley Cup was purchased for just $48.67 in 1892.',
+  'Phil Esposito was the first player to score 100 points in a single NHL season (1969).',
+  'Canada and Russia\'s 1972 Summit Series is considered one of sport\'s greatest rivalries.',
+  'Sidney Crosby was the first player since Mario Lemieux to win back-to-back scoring titles.',
+  'An NHL game uses approximately 50–60 pucks — each one frozen and swapped regularly.',
+  'Patrick Roy won the Stanley Cup four times with two different teams (Montreal and Colorado).',
+  'Hockey players can skate at speeds up to 30 mph (48 km/h) during open-ice rushes.',
+  'The Detroit Red Wings\' tradition involves fans throwing octopuses — one tentacle per playoff win needed.',
+  'NHL players lose 5–8 lbs of water weight per game through sweating alone.',
+];
+
 const GOAL_LABELS: Record<number, string> = {
   2: 'GOAL!',
   3: 'HAT TRICK!',
@@ -94,6 +122,7 @@ export default function Home() {
     paused,
     lastClearCount,
     clearEventId,
+    dropTrail,
     movePiece,
     rotatePiece,
     dropPiece,
@@ -103,6 +132,7 @@ export default function Home() {
 
   const { scores, addScore } = useHighScores();
   const wisdom = LEVEL_WISDOM[Math.min(level - 1, LEVEL_WISDOM.length - 1)];
+  const hockeyFact = HOCKEY_FACTS[(level - 1) % HOCKEY_FACTS.length];
 
   // Apply level-based background
   useEffect(() => {
@@ -110,6 +140,66 @@ export default function Home() {
     document.body.style.background = LEVEL_BACKGROUNDS[zoneIndex];
     return () => { document.body.style.background = ''; };
   }, [level]);
+
+  // Slapshot sound via Web Audio API
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const playSlapshot = useCallback(() => {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const t = ctx.currentTime;
+
+      // Sharp impact noise burst
+      const bufLen = Math.ceil(ctx.sampleRate * 0.11);
+      const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufLen; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.09));
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buf;
+
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 1200;
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.55, t);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+
+      noise.connect(hp);
+      hp.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noise.start(t);
+      noise.stop(t + 0.12);
+
+      // Low resonant thud
+      const osc = ctx.createOscillator();
+      osc.frequency.setValueAtTime(180, t);
+      osc.frequency.exponentialRampToValueAtTime(45, t + 0.09);
+
+      const oscGain = ctx.createGain();
+      oscGain.gain.setValueAtTime(0.38, t);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    } catch {
+      // Audio not available — silent fail
+    }
+  }, []);
+
+  const handleHardDrop = useCallback(() => {
+    playSlapshot();
+    dropPiece();
+  }, [playSlapshot, dropPiece]);
 
   // Touch swipe detection for mobile
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -129,7 +219,7 @@ export default function Home() {
       const ady = Math.abs(dy);
 
       if (adx < 8 && ady < 8) {
-        dropPiece();
+        handleHardDrop();
       } else if (adx > ady) {
         movePiece({ x: dx > 0 ? 1 : -1, y: 0 });
       } else if (dy < -20) {
@@ -139,7 +229,7 @@ export default function Home() {
       }
       touchStart.current = null;
     },
-    [gameOver, paused, movePiece, rotatePiece, dropPiece]
+    [gameOver, paused, movePiece, rotatePiece, handleHardDrop]
   );
 
   // Save score to leaderboard when game ends
@@ -181,7 +271,7 @@ export default function Home() {
           break;
         case ' ':
           e.preventDefault();
-          dropPiece();
+          handleHardDrop();
           break;
         case 'p':
         case 'P':
@@ -189,7 +279,7 @@ export default function Home() {
           break;
       }
     },
-    [gameOver, paused, movePiece, rotatePiece, dropPiece, togglePause, resetGame]
+    [gameOver, paused, movePiece, rotatePiece, handleHardDrop, togglePause, resetGame]
   );
 
   useEffect(() => {
@@ -223,9 +313,13 @@ export default function Home() {
               gameOver={gameOver}
               paused={paused}
             />
+            <div className={styles.hockeyFact}>
+              <span className={styles.hockeyFactLabel}>Did You Know?</span>
+              <p className={styles.hockeyFactText}>{hockeyFact}</p>
+            </div>
           </div>
           <div className={styles.boardWrapper} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'none' }}>
-            <GameBoard board={board} currentPiece={currentPiece} />
+            <GameBoard board={board} currentPiece={currentPiece} dropTrail={dropTrail} />
             <div className={styles.wisdomOverlay}>
               <span className={styles.wisdomOverlayLabel}>Words of wisdom</span>
               <p className={styles.wisdomOverlayText}>&ldquo;{wisdom}&rdquo;</p>
@@ -251,7 +345,7 @@ export default function Home() {
           onRight={() => movePiece({ x: 1, y: 0 })}
           onRotate={rotatePiece}
           onSoftDrop={() => movePiece({ x: 0, y: 1 })}
-          onHardDrop={dropPiece}
+          onHardDrop={handleHardDrop}
           onPause={togglePause}
         />
 
